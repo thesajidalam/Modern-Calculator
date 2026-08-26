@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧮@mohd_sajidalam</title>
+    <title>Modern Calculator | @thesajidalam</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             min-height: 100vh;
@@ -20,115 +16,89 @@
             background: #0a0e17;
             overflow: hidden;
             position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         .liquid-bg {
             position: absolute;
             width: 200%;
             height: 200%;
-            background: linear-gradient(
-                45deg,
-                #0066ff,
-                #00c8ff,
-                #00ffea,
-                #00ff9d
-            );
+            background: linear-gradient(45deg, #0066ff, #00c8ff, #00ffea, #00ff9d);
             animation: gradientFlow 25s ease infinite;
-            opacity: 0.15;
+            opacity: 0.12;
         }
 
         @keyframes gradientFlow {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            50% { transform: translate(-30%, -30%) rotate(180deg); }
+            0%   { transform: translate(-50%, -50%) rotate(0deg); }
+            50%  { transform: translate(-30%, -30%) rotate(180deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         .calculator {
- 
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(25px);
-            border-radius: 40px;
-            padding: 25px;
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 32px;
+            padding: 24px;
             width: 340px;
-            box-shadow: 0 0 60px rgba(0, 200, 255, 0.15);
+            box-shadow: 0 0 60px rgba(0, 200, 255, 0.12);
             position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .calculator::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
-            animation: pulse 8s infinite;
-            z-index: -1;
-        }
-
-        @keyframes pulse {
- 
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 0.3; }
-            100% { transform: scale(0.8); opacity: 0; }
+            border-radius: 32px;
+            background: radial-gradient(circle at 50% 30%, rgba(0, 255, 255, 0.08) 0%, transparent 60%);
+            pointer-events: none;
         }
 
         #display {
             background: transparent;
             border: none;
             color: white;
-            font-size: 56px;
+            font-size: 52px;
             text-align: right;
-            padding: 30px 20px;
+            padding: 24px 16px 16px;
             width: 100%;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             font-weight: 300;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            letter-spacing: -1px;
+            outline: none;
         }
 
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
 
         button {
- 
             border: none;
-            width: 68px;
-            height: 68px;
-            font-size: 28px;
+            height: 62px;
+            font-size: 24px;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(255, 255, 255, 0.08);
+            transition: all 0.15s ease;
+            background: rgba(255, 255, 255, 0.07);
             color: white;
-            position: relative;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s;
+            font-family: inherit;
+            font-weight: 400;
+            -webkit-tap-highlight-color: transparent;
         }
 
         button:hover {
- 
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(0, 200, 255, 0.2);
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.15);
         }
 
         button:active {
-            transform: scale(0.95);
+            transform: scale(0.94);
         }
 
         .operator {
@@ -137,180 +107,184 @@
             font-weight: 500;
         }
 
+        .operator:hover {
+            box-shadow: 0 0 25px rgba(0, 120, 255, 0.35);
+        }
+
         .equals {
             background: linear-gradient(145deg, #00ffaa, #00ccff);
-            color: #000 !important;
-            border-radius: 35px !important;
-            width: 100% !important;
+            color: #0a0e17 !important;
+            font-weight: 600;
+            border-radius: 31px !important;
+            height: 62px;
+        }
+
+        .equals:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 170, 0.3);
+        }
+
+        .zero-btn {
             grid-column: span 2;
+            border-radius: 31px !important;
         }
 
-        .credit-main {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-            font-weight: 300;
-            background: linear-gradient(45deg, #00ffea, #00ccff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: textGlow 2s ease-in-out infinite alternate;
-        }
-
-        .credit-sub {
- 
+        .credit {
             position: fixed;
             bottom: 20px;
-            right: 20px;
-            color: rgba(255, 255, 255, 0.3);
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.25);
             font-size: 12px;
-            text-align: right;
-            transition: all 0.3s;
+            transition: color 0.3s;
         }
 
-        .credit-sub:hover {
+        .credit a {
+            color: rgba(255, 255, 255, 0.35);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .credit a:hover {
             color: #00ccff;
-            transform: translateY(-2px);
         }
 
-        @keyframes textGlow {
-            0% { text-shadow: 0 0 10px rgba(0, 200, 255, 0.3); }
-            100% { text-shadow: 0 0 20px rgba(0, 200, 255, 0.6); }
-        }
-
-        @media (max-width: 480px) {
-            .calculator {
-                width: 90%;
-                padding: 20px;
-            }
-            button {
-                width: 100%;
-                height: 60px;
-            }
+        @media (max-width: 400px) {
+            .calculator { width: 92%; padding: 18px; }
+            button { height: 56px; font-size: 22px; }
+            #display { font-size: 42px; }
         }
     </style>
 </head>
 <body>
     <div class="liquid-bg"></div>
-    
-    <div class="credit-main">Designed by SAJID ALAM</div>
- 
+
     <div class="calculator">
         <input type="text" id="display" readonly value="0">
         <div class="buttons">
             <button class="operator" onclick="clearDisplay()">C</button>
-            <button class="operator" onclick="appendOperator('±')">±</button>
-            <button class="operator" onclick="appendOperator('%')">%</button>
-            <button class="operator" onclick="appendOperator('/')">/</button>
-            
-            <button onclick="appendNumber('7')">7</button>
-            <button onclick="appendNumber('8')">8</button>
-            <button onclick="appendNumber('9')">9</button>
-            <button class="operator" onclick="appendOperator('*')">×</button>
-            
-            <button onclick="appendNumber('4')">4</button>
-            <button onclick="appendNumber('5')">5</button>
-            <button onclick="appendNumber('6')">6</button>
-            <button class="operator" onclick="appendOperator('-')">−</button>
-            
-            <button onclick="appendNumber('1')">1</button>
-            <button onclick="appendNumber('2')">2</button>
-            <button onclick="appendNumber('3')">3</button>
-            <button class="operator" onclick="appendOperator('+')">+</button>
-             
-            <button onclick="appendNumber('0')" style="grid-column: span 2; width: 100% !important; border-radius: 35px !important;">0</button>
-            <button onclick="appendNumber('.')">.</button>
-            <button class="equals" onclick="calculate()">=</button>
+            <button class="operator" onclick="toggleSign()">±</button>
+            <button class="operator" onclick="inputPercent()">%</button>
+            <button class="operator" onclick="inputOperator('/')">÷</button>
+
+            <button onclick="inputDigit('7')">7</button>
+            <button onclick="inputDigit('8')">8</button>
+            <button onclick="inputDigit('9')">9</button>
+            <button class="operator" onclick="inputOperator('*')">×</button>
+
+            <button onclick="inputDigit('4')">4</button>
+            <button onclick="inputDigit('5')">5</button>
+            <button onclick="inputDigit('6')">6</button>
+            <button class="operator" onclick="inputOperator('-')">−</button>
+
+            <button onclick="inputDigit('1')">1</button>
+            <button onclick="inputDigit('2')">2</button>
+            <button onclick="inputDigit('3')">3</button>
+            <button class="operator" onclick="inputOperator('+')">+</button>
+
+            <button class="zero-btn" onclick="inputDigit('0')">0</button>
+            <button onclick="inputDigit('.')">.</button>
+            <button class="equals" onclick="compute()">=</button>
         </div>
     </div>
 
-    <a href="https://linktr.ee/mohd_sajidalam/" target="_blank" class="credit-sub">
-        @mohd_sajidalam<br>
-        linktr.ee/mohd_sajidalam
-    </a>
+    <div class="credit">
+        Built by <a href="https://github.com/thesajidalam" target="_blank">@thesajidalam</a>
+    </div>
 
     <script>
-                let display = document.getElementById('display');
-        let currentValue = '0';
-        let firstOperand = null;
-        let operator = null;
-        let waitingForSecondOperand = false;
+        const display = document.getElementById('display');
+        let current = '0';
+        let prev = null;
+        let op = null;
+        let fresh = false;
 
-        function updateDisplay() {
-            display.value = currentValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        function render() {
+            display.value = current.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
- 
-        function appendNumber(num) {
-            if (waitingForSecondOperand) {
-                currentValue = num;
-                waitingForSecondOperand = false;
+
+        function inputDigit(d) {
+            if (fresh) { current = d === '.' ? '0.' : d; fresh = false; render(); return; }
+            if (d === '.' && current.includes('.')) return;
+            current = current === '0' && d !== '.' ? d : current + d;
+            render();
+        }
+
+        function inputOperator(next) {
+            const val = parseFloat(current);
+            if (prev !== null && op && !fresh) {
+                const r = calc(prev, val, op);
+                current = String(parseFloat(r.toFixed(10)));
+                prev = r;
+                render();
             } else {
-                currentValue = currentValue === '0' ? num : currentValue + num;
+                prev = val;
             }
-            updateDisplay();
+            op = next;
+            fresh = true;
         }
 
-        function appendOperator(op) {
-            if (op === '±') {
-                currentValue = (parseFloat(currentValue) * -1).toString();
-                updateDisplay();
-                return;
+        function compute() {
+            if (prev === null || op === null || fresh) return;
+            const val = parseFloat(current);
+            const r = calc(prev, val, op);
+            if (r === Infinity || r === -Infinity || isNaN(r)) {
+                current = 'Error';
+            } else {
+                current = String(parseFloat(r.toFixed(10)));
             }
-            
-            const inputValue = parseFloat(currentValue.replace(/,/g, ''));
-            
-            if (operator && waitingForSecondOperand) {
-                operator = op;
-                return;
-            }
- 
-            
-            if (firstOperand === null) {
-                firstOperand = inputValue;
-            } else if (operator) {
-                const result = performCalculation(firstOperand, inputValue, operator);
-                currentValue = `${parseFloat(result.toFixed(10))}`;
-                firstOperand = result;
-                updateDisplay();
-            }
-            
-            operator = op;
-            waitingForSecondOperand = true;
+            prev = null;
+            op = null;
+            fresh = true;
+            render();
         }
- 
 
-        function performCalculation(a, b, op) {
-            switch(op) {
+        function calc(a, b, operator) {
+            switch (operator) {
                 case '+': return a + b;
                 case '-': return a - b;
                 case '*': return a * b;
-                case '/': return a / b;
-                case '%': return a % b;
+                case '/': return b === 0 ? Infinity : a / b;
+                case '%': return b === 0 ? Infinity : a % b;
                 default: return b;
             }
         }
- 
-        function calculate() {
-            if (operator === null || waitingForSecondOperand) return;
-            
-            const inputValue = parseFloat(currentValue.replace(/,/g, ''));
-            const result = performCalculation(firstOperand, inputValue, operator);
-            //Made-By-Sajid
-            currentValue = `${parseFloat(result.toFixed(10))}`;
-            operator = null;
-            firstOperand = null;
-            waitingForSecondOperand = false;
-            updateDisplay();
-        }
- 
+
         function clearDisplay() {
-            currentValue = '0';
-            firstOperand = null;
-            operator = null;
-            waitingForSecondOperand = false;
-            updateDisplay();
+            current = '0';
+            prev = null;
+            op = null;
+            fresh = false;
+            render();
         }
+
+        function toggleSign() {
+            if (current === '0' || current === 'Error') return;
+            current = current.startsWith('-') ? current.slice(1) : '-' + current;
+            render();
+        }
+
+        function inputPercent() {
+            if (current === 'Error') return;
+            current = String(parseFloat(current) / 100);
+            render();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9') inputDigit(e.key);
+            else if (e.key === '.') inputDigit('.');
+            else if (e.key === '+') inputOperator('+');
+            else if (e.key === '-') inputOperator('-');
+            else if (e.key === '*') inputOperator('*');
+            else if (e.key === '/') { e.preventDefault(); inputOperator('/'); }
+            else if (e.key === '%') inputPercent();
+            else if (e.key === 'Enter' || e.key === '=') compute();
+            else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') clearDisplay();
+            else if (e.key === 'Backspace') {
+                current = current.length > 1 ? current.slice(0, -1) : '0';
+                render();
+            }
+        });
     </script>
 </body>
 </html>
