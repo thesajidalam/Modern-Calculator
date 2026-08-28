@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Calculator | @thesajidalam</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -14,9 +17,9 @@
             justify-content: center;
             align-items: center;
             background: #0a0e17;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             overflow: hidden;
             position: relative;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         .liquid-bg {
@@ -35,15 +38,16 @@
         }
 
         .calculator {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.05);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border-radius: 32px;
             padding: 24px;
             width: 340px;
-            box-shadow: 0 0 60px rgba(0, 200, 255, 0.12);
+            box-shadow: 0 0 60px rgba(0,200,255,0.12);
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.08);
+            z-index: 1;
         }
 
         .calculator::after {
@@ -51,22 +55,38 @@
             position: absolute;
             inset: 0;
             border-radius: 32px;
-            background: radial-gradient(circle at 50% 30%, rgba(0, 255, 255, 0.08) 0%, transparent 60%);
+            background: radial-gradient(circle at 50% 30%, rgba(0,255,255,0.08) 0%, transparent 60%);
             pointer-events: none;
         }
 
-        #display {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 52px;
-            text-align: right;
-            padding: 24px 16px 16px;
-            width: 100%;
+        .screen {
+            padding: 20px 16px 16px;
             margin-bottom: 12px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: flex-end;
+        }
+
+        .screen-expr {
+            font-size: 14px;
+            color: rgba(255,255,255,0.3);
+            min-height: 20px;
+            word-break: break-all;
+            text-align: right;
+            margin-bottom: 4px;
+        }
+
+        .screen-val {
+            font-size: 52px;
             font-weight: 300;
+            color: #fff;
             letter-spacing: -1px;
-            outline: none;
+            word-break: break-all;
+            text-align: right;
+            line-height: 1.1;
+            transition: font-size 0.15s ease;
         }
 
         .buttons {
@@ -75,14 +95,14 @@
             gap: 10px;
         }
 
-        button {
+        .btn {
             border: none;
             height: 62px;
             font-size: 24px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.15s ease;
-            background: rgba(255, 255, 255, 0.07);
+            background: rgba(255,255,255,0.07);
             color: white;
             display: flex;
             justify-content: center;
@@ -90,42 +110,45 @@
             font-family: inherit;
             font-weight: 400;
             -webkit-tap-highlight-color: transparent;
+            outline: none;
+            user-select: none;
         }
 
-        button:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 20px rgba(0, 200, 255, 0.15);
+        .btn:focus-visible {
+            box-shadow: 0 0 0 2px #00c8ff;
         }
 
-        button:active {
-            transform: scale(0.94);
+        .btn:hover { transform: scale(1.08); box-shadow: 0 0 20px rgba(0,200,255,0.15); }
+        .btn:active { transform: scale(0.94); }
+
+        .btn-fn {
+            background: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.85);
+            font-size: 20px;
         }
 
-        .operator {
+        .btn-fn:hover { background: rgba(255,255,255,0.18); }
+
+        .btn-op {
             background: linear-gradient(145deg, #00b4ff, #0066ff);
-            color: white !important;
+            color: white;
             font-weight: 500;
         }
 
-        .operator:hover {
-            box-shadow: 0 0 25px rgba(0, 120, 255, 0.35);
-        }
+        .btn-op:hover { box-shadow: 0 0 25px rgba(0,120,255,0.35); }
+        .btn-op.active { background: #fff; color: #0066ff; }
 
-        .equals {
+        .btn-eq {
             background: linear-gradient(145deg, #00ffaa, #00ccff);
-            color: #0a0e17 !important;
+            color: #0a0e17;
             font-weight: 600;
-            border-radius: 31px !important;
-            height: 62px;
         }
 
-        .equals:hover {
-            box-shadow: 0 0 25px rgba(0, 255, 170, 0.3);
-        }
+        .btn-eq:hover { box-shadow: 0 0 25px rgba(0,255,170,0.3); }
 
-        .zero-btn {
+        .btn-zero {
             grid-column: span 2;
-            border-radius: 31px !important;
+            border-radius: 31px;
         }
 
         .credit {
@@ -134,157 +157,213 @@
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
-            color: rgba(255, 255, 255, 0.25);
+            color: rgba(255,255,255,0.25);
             font-size: 12px;
-            transition: color 0.3s;
         }
 
         .credit a {
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(255,255,255,0.35);
             text-decoration: none;
             transition: color 0.3s;
         }
 
-        .credit a:hover {
-            color: #00ccff;
-        }
+        .credit a:hover { color: #00ccff; }
 
         @media (max-width: 400px) {
             .calculator { width: 92%; padding: 18px; }
-            button { height: 56px; font-size: 22px; }
-            #display { font-size: 42px; }
+            .btn { height: 56px; font-size: 22px; }
+            .screen-val { font-size: 42px; }
         }
     </style>
 </head>
 <body>
     <div class="liquid-bg"></div>
+    <div id="root"></div>
+    <div class="credit">Built by <a href="https://github.com/thesajidalam" target="_blank">@thesajidalam</a></div>
 
-    <div class="calculator">
-        <input type="text" id="display" readonly value="0">
-        <div class="buttons">
-            <button class="operator" onclick="clearDisplay()">C</button>
-            <button class="operator" onclick="toggleSign()">±</button>
-            <button class="operator" onclick="inputPercent()">%</button>
-            <button class="operator" onclick="inputOperator('/')">÷</button>
+    <script type="text/babel">
+        const { useState, useCallback, useEffect } = React;
 
-            <button onclick="inputDigit('7')">7</button>
-            <button onclick="inputDigit('8')">8</button>
-            <button onclick="inputDigit('9')">9</button>
-            <button class="operator" onclick="inputOperator('*')">×</button>
-
-            <button onclick="inputDigit('4')">4</button>
-            <button onclick="inputDigit('5')">5</button>
-            <button onclick="inputDigit('6')">6</button>
-            <button class="operator" onclick="inputOperator('-')">−</button>
-
-            <button onclick="inputDigit('1')">1</button>
-            <button onclick="inputDigit('2')">2</button>
-            <button onclick="inputDigit('3')">3</button>
-            <button class="operator" onclick="inputOperator('+')">+</button>
-
-            <button class="zero-btn" onclick="inputDigit('0')">0</button>
-            <button onclick="inputDigit('.')">.</button>
-            <button class="equals" onclick="compute()">=</button>
-        </div>
-    </div>
-
-    <div class="credit">
-        Built by <a href="https://github.com/thesajidalam" target="_blank">@thesajidalam</a>
-    </div>
-
-    <script>
-        const display = document.getElementById('display');
-        let current = '0';
-        let prev = null;
-        let op = null;
-        let fresh = false;
-
-        function render() {
-            display.value = current.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        function formatNum(n) {
+            if (n === 'Error') return 'Error';
+            const num = parseFloat(n);
+            if (isNaN(num)) return 'Error';
+            if (Math.abs(num) >= 1e12) return num.toExponential(4);
+            const s = parseFloat(num.toPrecision(12));
+            const str = String(s);
+            if (str.includes('e')) return str;
+            const parts = str.split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return parts.join('.');
         }
 
-        function inputDigit(d) {
-            if (fresh) { current = d === '.' ? '0.' : d; fresh = false; render(); return; }
-            if (d === '.' && current.includes('.')) return;
-            current = current === '0' && d !== '.' ? d : current + d;
-            render();
-        }
-
-        function inputOperator(next) {
-            const val = parseFloat(current);
-            if (prev !== null && op && !fresh) {
-                const r = calc(prev, val, op);
-                current = String(parseFloat(r.toFixed(10)));
-                prev = r;
-                render();
-            } else {
-                prev = val;
-            }
-            op = next;
-            fresh = true;
-        }
-
-        function compute() {
-            if (prev === null || op === null || fresh) return;
-            const val = parseFloat(current);
-            const r = calc(prev, val, op);
-            if (r === Infinity || r === -Infinity || isNaN(r)) {
-                current = 'Error';
-            } else {
-                current = String(parseFloat(r.toFixed(10)));
-            }
-            prev = null;
-            op = null;
-            fresh = true;
-            render();
-        }
-
-        function calc(a, b, operator) {
-            switch (operator) {
+        function calc(a, b, op) {
+            switch (op) {
                 case '+': return a + b;
                 case '-': return a - b;
                 case '*': return a * b;
-                case '/': return b === 0 ? Infinity : a / b;
-                case '%': return b === 0 ? Infinity : a % b;
+                case '/': return b === 0 ? NaN : a / b;
                 default: return b;
             }
         }
 
-        function clearDisplay() {
-            current = '0';
-            prev = null;
-            op = null;
-            fresh = false;
-            render();
+        const OP_LABELS = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+
+        function Calculator() {
+            const [current, setCurrent] = useState('0');
+            const [prev, setPrev] = useState(null);
+            const [op, setOp] = useState(null);
+            const [fresh, setFresh] = useState(false);
+            const [activeOp, setActiveOp] = useState(null);
+
+            const display = current === 'Error' ? 'Error' : formatNum(current);
+            const expr = prev !== null && op
+                ? `${formatNum(String(prev))} ${OP_LABELS[op]}`
+                : '';
+
+            const inputDigit = useCallback((d) => {
+                setCurrent(c => {
+                    if (c === 'Error') return d === '.' ? '0.' : d;
+                    if (fresh) { setFresh(false); return d === '.' ? '0.' : d; }
+                    if (d === '.' && c.includes('.')) return c;
+                    return c === '0' && d !== '.' ? d : c + d;
+                });
+                setActiveOp(null);
+            }, [fresh]);
+
+            const inputOp = useCallback((next) => {
+                setCurrent(c => {
+                    const val = parseFloat(c);
+                    if (prev !== null && op && !fresh) {
+                        const r = calc(prev, val, op);
+                        if (isNaN(r) || !isFinite(r)) { setPrev(null); setOp(null); setFresh(true); setActiveOp(null); return 'Error'; }
+                        const result = String(parseFloat(r.toFixed(10)));
+                        setPrev(parseFloat(result));
+                        setFresh(true);
+                        setActiveOp(next);
+                        return result;
+                    }
+                    setPrev(val);
+                    setOp(next);
+                    setFresh(true);
+                    setActiveOp(next);
+                    return c;
+                });
+            }, [prev, op, fresh]);
+
+            const compute = useCallback(() => {
+                setCurrent(c => {
+                    if (prev === null || op === null || fresh) return c;
+                    const val = parseFloat(c);
+                    if (isNaN(val)) { setPrev(null); setOp(null); setFresh(true); setActiveOp(null); return 'Error'; }
+                    const r = calc(prev, val, op);
+                    setPrev(null);
+                    setOp(null);
+                    setFresh(true);
+                    setActiveOp(null);
+                    if (isNaN(r) || !isFinite(r)) return 'Error';
+                    return String(parseFloat(r.toFixed(10)));
+                });
+            }, [prev, op, fresh]);
+
+            const clear = useCallback(() => {
+                setCurrent('0');
+                setPrev(null);
+                setOp(null);
+                setFresh(false);
+                setActiveOp(null);
+            }, []);
+
+            const toggleSign = useCallback(() => {
+                setCurrent(c => {
+                    if (c === 'Error' || c === '0') return c;
+                    return c.startsWith('-') ? c.slice(1) : '-' + c;
+                });
+            }, []);
+
+            const percent = useCallback(() => {
+                setCurrent(c => {
+                    if (c === 'Error') return c;
+                    const v = parseFloat(c) / 100;
+                    return String(parseFloat(v.toFixed(10)));
+                });
+            }, []);
+
+            const backspace = useCallback(() => {
+                setCurrent(c => {
+                    if (c === 'Error' || fresh) return c;
+                    return c.length > 1 ? c.slice(0, -1) : '0';
+                });
+            }, [fresh]);
+
+            useEffect(() => {
+                const handler = (e) => {
+                    if (e.key >= '0' && e.key <= '9') { inputDigit(e.key); return; }
+                    if (e.key === '.') { inputDigit('.'); return; }
+                    if (e.key === '+') { inputOp('+'); return; }
+                    if (e.key === '-') { inputOp('-'); return; }
+                    if (e.key === '*') { inputOp('*'); return; }
+                    if (e.key === '/') { e.preventDefault(); inputOp('/'); return; }
+                    if (e.key === '%') { percent(); return; }
+                    if (e.key === 'Enter' || e.key === '=') { compute(); return; }
+                    if (e.key === 'Escape') { clear(); return; }
+                    if (e.key === 'Backspace') { backspace(); return; }
+                };
+                window.addEventListener('keydown', handler);
+                return () => window.removeEventListener('keydown', handler);
+            }, [inputDigit, inputOp, compute, clear, percent, backspace]);
+
+            const fontSize = display.length > 12
+                ? `${Math.max(26, 52 - (display.length - 12) * 2.5)}px`
+                : '52px';
+
+            const buttons = [
+                { label: 'AC', action: clear, className: 'btn btn-fn' },
+                { label: '±', action: toggleSign, className: 'btn btn-fn' },
+                { label: '%', action: percent, className: 'btn btn-fn' },
+                { label: '÷', action: () => inputOp('/'), className: `btn btn-op${activeOp === '/' ? ' active' : ''}` },
+                { label: '7', action: () => inputDigit('7') },
+                { label: '8', action: () => inputDigit('8') },
+                { label: '9', action: () => inputDigit('9') },
+                { label: '×', action: () => inputOp('*'), className: `btn btn-op${activeOp === '*' ? ' active' : ''}` },
+                { label: '4', action: () => inputDigit('4') },
+                { label: '5', action: () => inputDigit('5') },
+                { label: '6', action: () => inputDigit('6') },
+                { label: '−', action: () => inputOp('-'), className: `btn btn-op${activeOp === '-' ? ' active' : ''}` },
+                { label: '1', action: () => inputDigit('1') },
+                { label: '2', action: () => inputDigit('2') },
+                { label: '3', action: () => inputDigit('3') },
+                { label: '+', action: () => inputOp('+'), className: `btn btn-op${activeOp === '+' ? ' active' : ''}` },
+                { label: '0', action: () => inputDigit('0'), className: 'btn btn-zero' },
+                { label: '.', action: () => inputDigit('.') },
+                { label: '=', action: compute, className: 'btn btn-eq' },
+            ];
+
+            return (
+                <div className="calculator" role="application" aria-label="Calculator">
+                    <div className="screen">
+                        <div className="screen-expr" aria-live="polite">{expr}</div>
+                        <div className="screen-val" style={{ fontSize }} aria-live="assertive" aria-atomic="true">{display}</div>
+                    </div>
+                    <div className="buttons" role="group">
+                        {buttons.map((b, i) => (
+                            <button
+                                key={i}
+                                className={b.className || 'btn'}
+                                onClick={b.action}
+                                tabIndex={0}
+                                aria-label={b.label}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); b.action(); } }}
+                            >
+                                {b.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            );
         }
 
-        function toggleSign() {
-            if (current === '0' || current === 'Error') return;
-            current = current.startsWith('-') ? current.slice(1) : '-' + current;
-            render();
-        }
-
-        function inputPercent() {
-            if (current === 'Error') return;
-            current = String(parseFloat(current) / 100);
-            render();
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key >= '0' && e.key <= '9') inputDigit(e.key);
-            else if (e.key === '.') inputDigit('.');
-            else if (e.key === '+') inputOperator('+');
-            else if (e.key === '-') inputOperator('-');
-            else if (e.key === '*') inputOperator('*');
-            else if (e.key === '/') { e.preventDefault(); inputOperator('/'); }
-            else if (e.key === '%') inputPercent();
-            else if (e.key === 'Enter' || e.key === '=') compute();
-            else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') clearDisplay();
-            else if (e.key === 'Backspace') {
-                current = current.length > 1 ? current.slice(0, -1) : '0';
-                render();
-            }
-        });
+        ReactDOM.createRoot(document.getElementById('root')).render(<Calculator />);
     </script>
 </body>
 </html>

@@ -1,46 +1,41 @@
-<div align="center">
-  <h1>🧮 Modern Calculator</h1>
-  <p>Glassmorphism calculator with animated liquid background, keyboard support, and clean UI.</p>
-  <br/>
-  <a href="https://moderncalculator-seven.vercel.app"><img src="https://img.shields.io/badge/Live_Demo-00D9FF?style=for-the-badge&logo=google-chrome&logoColor=white" /></a>
-  <a href="https://github.com/thesajidalam/Modern-Calculator"><img src="https://img.shields.io/badge/Source-181717?style=for-the-badge&logo=github&logoColor=white" /></a>
-</div>
+# 🧮 Modern Calculator
 
----
+A sleek, modern calculator rebuilt with **React** (via CDN — no build step) and styled with a glassmorphism UI, animated gradient background, and full keyboard support.
+
+🔗 **Live Demo:** [thesajidalam.github.io](https://thesajidalam.github.io/Modern-Calculator/)
 
 ## ✨ Features
 
-- **Glassmorphism UI** — Frosted glass effect with animated gradient background
-- **Keyboard Support** — Full numpad, operators, Enter, Escape, Backspace
-- **Chain Calculations** — Supports连续运算 (e.g. `2 + 3 × 4`)
-- **Division by Zero** — Shows "Error" instead of breaking
+- **React UI** — Single-file app using React 18 + Babel via CDN (no `node_modules`, no build step)
+- **Glassmorphism design** — Frosted glass with an animated liquid gradient background
+- **Keyboard support** — Digits, operators, Enter, Escape, Backspace, `%`
+- **Chain calculations** — Supports sequences like `2 + 3 × 4` with intermediate results
+- **Division by zero** — Safe "Error" state, no `NaN` / `Infinity`
+- **Percent & sign toggle** — `%` and `±` buttons
 - **Responsive** — Works on mobile and desktop
-- **Zero Dependencies** — Single HTML file, no frameworks
 
 ## ⌨️ Keyboard Shortcuts
 
 | Key | Action |
 |-----|--------|
-| `0-9` | Input digit |
-| `.` | Decimal point |
+| `0-9` / `.` | Input digit / decimal |
 | `+ - * /` | Operators |
 | `%` | Percentage |
 | `Enter` or `=` | Calculate |
-| `Escape` or `C` | Clear |
+| `Escape` | Clear |
 | `Backspace` | Delete last digit |
 
 ## 🚀 Usage
 
-```bash
-# Clone
-git clone https://github.com/thesajidalam/Modern-Calculator.git
+No build step required — just open the file.
 
-# Open in browser
+```bash
+git clone https://github.com/thesajidalam/Modern-Calculator.git
 cd Modern-Calculator
 open index.html
 ```
 
-No build step needed.
+Or deploy the single `index.html` to any static host (e.g. GitHub Pages).
 
 ---
 
